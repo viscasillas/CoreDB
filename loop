@@ -1,0 +1,10 @@
+#!/usr/bin/php -q
+<?php
+$i=0;
+while ($i <= 100000) { // Output values from 0 to 10
+   echo "The number is ".$i."
+ ";
+   exec('coredb users create');
+   $i++;
+}
+?>

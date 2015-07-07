@@ -1,0 +1,92 @@
+#!/usr/bin/php -q
+<?php
+// title: SnapTask CLI
+// author: Jose Viscasillas
+
+function console_log($string){
+	echo '➜  '.$string.'
+';
+}
+function console_log_no_arrow($string){
+	echo $string.'
+';
+}
+function console_log_welcome(){
+	console_log('Welcome to CoreDB CLI
+
+	** DATABASE
+	*************************************************************************************************************
+	* [database_here] create [specific_id *optional]= creates a new object and returns the id;
+	* [database_here] read [object_id_here]  = returns all fields and values
+	* [database_here] read [object_id_here] [field]  = returns specific and value field
+	* [database_here] update [object_id_here] [field] [value] = creates or updates a field with value
+	* [database_here] delete [object_id_here] = delete an object by its id
+	* [database_here] list = returns all objects in a database
+	* [database_here] find [term] = returns a list of object\'s ids that batch the term		
+	* [database_here] -A destroy = destroys database	
+	* [database_here] -A start = creates a new database
+	* [database_here] update [object_id_here] [field] [value] +i [indexname] = updates & add to index
+	* [database_here] +i [value_to_index] [index_database_object]
+	* -all = show all databases
+
+	** AUTO-INDEXING
+	*************************************************************************************************************
+	1. add a field titled "_index_val" with the value of the field that you want auto-indexed.
+	2. add a field titled "_index_obj" with the value of the object in which you are indexing.
+	3. this will update the index with that value on any update to the value of the object.
+	4. this must be done individually to each object for it to be auto-indexed.
+
+	** OBJECT SCHEMAS / TEMPLATES
+	*************************************************************************************************************
+	1. you can create a template for an object to use on the create command.
+	2. create an object in the "_templates" database with the title you want for your template/schema.
+	3. add fields to that template object that match the fields and values you would like created automatically.
+	4. now simply use "create -t [template_object_here]" instead of just "create". 
+
+	tip**: to have auto-indexing work automatically add the auto_index files to your templates. =D
+');
+}
+// Load all classes installed
+$bins = glob('bin/*');
+foreach ($bins as $bin) {
+   if(file_exists($bin.'/cla.php')){
+   		require_once($bin.'/cla.php');
+   }
+}
+
+		if(isset($argv[1])){
+			$param_1 = $argv[1];
+		}else{
+			console_log_welcome();
+		}
+		if(isset($argv[2])){
+			$param_2 = $argv[2];
+		}
+		if(isset($argv[3])){
+			$param_3 = $argv[3];
+		}
+		if(isset($argv[4])){
+			$param_4 = $argv[4];
+		}
+		if(isset($argv[5])){
+			$param_5 = $argv[5];
+		}
+		if(isset($argv[6])){
+			$param_6 = $argv[6];
+		}
+		if(isset($argv[7])){
+			$param_7 = $argv[7];
+		}
+		if(isset($argv[8])){
+			$param_8 = $argv[8];
+		}
+		if(isset($argv[9])){
+			$param_9 = $argv[9];
+		}
+		if(isset($argv[10])){
+			$param_10 = $argv[10];
+		}
+		require_once('bin/db/ext.php');
+
+
+?>

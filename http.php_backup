@@ -1,0 +1,51 @@
+<?php
+function get_client_ip() {
+    $ipaddress = '';
+    if (getenv('HTTP_CLIENT_IP'))
+        $ipaddress = getenv('HTTP_CLIENT_IP');
+    else if(getenv('HTTP_X_FORWARDED_FOR'))
+        $ipaddress = getenv('HTTP_X_FORWARDED_FOR');
+    else if(getenv('HTTP_X_FORWARDED'))
+        $ipaddress = getenv('HTTP_X_FORWARDED');
+    else if(getenv('HTTP_FORWARDED_FOR'))
+        $ipaddress = getenv('HTTP_FORWARDED_FOR');
+    else if(getenv('HTTP_FORWARDED'))
+       $ipaddress = getenv('HTTP_FORWARDED');
+    else if(getenv('REMOTE_ADDR'))
+        $ipaddress = getenv('REMOTE_ADDR');
+    else
+        $ipaddress = 'UNKNOWN';
+    return $ipaddress;
+}
+
+
+$clientIP = get_client_ip();
+if(file_exists('data/_system.db/auth_keys.do/'.$clientIP.'.val')){
+
+}else{
+	echo 'You dont belong here. Your IP is not registered';
+}
+
+if(isset($_GET['api'])){
+	if($_GET['api']=='auth'){
+		if(isset($_GET['username'])){
+			// return the users object it should be accessible in the next block as $user->$_GET['username']
+			$return = exec('./coredb _indexes read username '.$_GET['username']);
+			if(substr($return, 0, 2)=='?>'){
+				$return = substr($return, 2);
+			}else{}
+			$user = json_decode($return);
+			//grab the current password on file by parsing the json object in the db
+			$passwordOnFileInMD5 = exec('./coredb users read '.$user->$_GET['username'].' password');
+			if(substr($passwordOnFileInMD5, 0, 2)=='?>'){
+				$passwordOnFileInMD5 = substr($passwordOnFileInMD5, 2);
+			}else{}
+			$usersObject = json_decode($passwordOnFileInMD5);
+			if (strpos($usersObject->password,$_GET['hash']) !== false) {
+			    echo 'match';
+			}else{
+				echo 'wrong password';
+			}
+		}
+	}
+}

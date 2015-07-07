@@ -1,0 +1,124 @@
+#!/usr/bin/php -q
+<?php
+// title: SnapTask CLI
+// author: Jose Viscasillas
+
+function console_log($string){
+	echo '➜  '.$string.'
+';
+}
+function console_log_no_arrow($string){
+	echo $string.'
+';
+}
+function console_log_welcome(){
+	console_log('Welcome to SnapTask CLI
+
+	** COMMAND FLAGS			** DATABASE - requires -p command flag
+	********************			*************************************************************************************
+	*  -h = help 				* db [database_here] create [specific_id *optional]= creates a new object and returns the id;
+	*  -p = load program 			* db [database_here] read [object_id_here]  = returns all fields and values
+	*  -s = settings 			* db [database_here] read [object_id_here] [field]  = returns specific and value field
+						* db [database_here] update [object_id_here] [field] [value] = creates or updates a field with value
+	** API SERVICES				* db [database_here] delete [object_id_here] = delete an object by its id
+	* stop = disable APIs			* db [database_here] list = returns all objects in a database
+	* start = allow APIs			* db [database_here] find [term] = returns a list of object\'s ids that batch the term		
+	* status = check status 		* db [database_here] -A destroy = destroys database	
+						* db [database_here] -A start = creates a new database
+						* db [database_here] update [object_id_here] [field] [value] +i [indexname] = updates & add to index
+						* db [database_here] +i [value_to_index] [index_database_object]
+						* db -all = show all databases
+
+	** AUTO-INDEXING
+	************************************************************************************************
+	1. add a field titled "_index_val" with the value of the field that you want auto-indexed.
+	2. add a field titled "_index_obj" with the value of the object in which you are indexing.
+	3. this will update the index with that value on any update to the value of the object.
+	4. this must be done individually to each object for it to be auto-indexed.
+
+	** OBJECT SCHEMAS / TEMPLATES
+	************************************************************************************************
+	1. you can create a template for an object to use on the create command.
+	2. create an object in the "_templates" database with the title you want for your template/schema.
+	3. add fields to that template object that match the fields and values you would like created automatically.
+	4. now simply use "create -t [template_object_here]" instead of just "create". 
+
+	tip**: to have auto-indexing work automatically add the auto_index files to your templates. =D
+');
+}
+// Load all classes installed
+$bins = glob('bin/*');
+foreach ($bins as $bin) {
+   if(file_exists($bin.'/cla.php')){
+   		require_once($bin.'/cla.php');
+   }
+}
+if(isset($argv[1])){
+	// Help
+	if($argv[1] == '-h' || $argv[1] == '-H'){
+		console_log_welcome();
+	}
+	// Switch OFF and ON
+	if($argv[1] == 'stop' || $argv[1] == 'STOP'){
+		switcher::off();
+	}
+	if($argv[1] == 'start' || $argv[1] == 'START'){
+		switcher::on();
+	}
+	if($argv[1] == 'status' || $argv[1] == 'STATUS'){
+		console_log('API over HTTP is currently '.dotval::read('data/_system.db/status.val'));
+	}
+
+
+
+	// Without an authKey
+	if($argv[1] == '-p' || $argv[1] == '-P'){
+		// We handoff 10 custom variables by default to any program launched.
+		// You can add more by adding to this list, but make sure you +2 the argv
+		if(isset($argv[3])){
+			$param_1 = $argv[3];
+		}
+		if(isset($argv[4])){
+			$param_2 = $argv[4];
+		}
+		if(isset($argv[5])){
+			$param_3 = $argv[5];
+		}
+		if(isset($argv[6])){
+			$param_4 = $argv[6];
+		}
+		if(isset($argv[7])){
+			$param_5 = $argv[7];
+		}
+		if(isset($argv[8])){
+			$param_6 = $argv[8];
+		}
+		if(isset($argv[9])){
+			$param_7 = $argv[9];
+		}
+		if(isset($argv[10])){
+			$param_8 = $argv[10];
+		}
+		if(isset($argv[11])){
+			$param_9 = $argv[11];
+		}
+		if(isset($argv[12])){
+			$param_10 = $argv[12];
+		}
+		if(file_exists('bin/'.$argv[2].'/ext.php')){
+			require_once('bin/'.$argv[2].'/ext.php');
+		}
+	}
+	// With an authKey
+	if($argv[1] == 'authKey'){
+		if($argv[2] == 'errors' || $argv[2] == 'error'){
+			echo $errorlog;
+		}
+		if($argv[2] == 'actions' || $argv[2] == 'action'){
+			echo $errorlog;
+		}
+	}
+}else{
+	console_log_welcome();
+}
+?>
